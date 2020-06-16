@@ -101,13 +101,18 @@ class Record{
             print("client error")
             return
         }
-        let _ = client.files.upload(path: filePathName, mode: .add, autorename: false, clientModified: nil, mute: false, input: fileData).response { response, error in
-            if let metadata = response {
-                print("Uploaded file name: \(metadata.name)")
-            } else {
-                print(error!)
+        
+        let _ = client.files.upload(path: filePathName, mode: .add, autorename: false, clientModified: nil, mute: false, input: fileData)
+            .response { response, error in
+                if let metadata = response {
+                    print("Uploaded file name: \(metadata.name)")
+                } else {
+                    print(error!)
+                }
             }
-        }
+            .progress { progressData in
+                print(progressData)
+            }
     }
     
 //  array func----------------------------------------------------------------------
