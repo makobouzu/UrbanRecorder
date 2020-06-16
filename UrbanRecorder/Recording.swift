@@ -76,6 +76,7 @@ class Record{
         let docsDirect = paths[0]
         let filename:String = date + extensions
         let url = docsDirect.appendingPathComponent(filename)
+        print(url)
         return url
     }
     
@@ -84,7 +85,8 @@ class Record{
             print("client error")
             return
         }
-        client.files.createFolderV2(path: folderPathName).response { response, error in
+        client.files.createFolderV2(path: folderPathName)
+            .response { response, error in
             if error != nil {
                 print("error")
                 return
@@ -101,7 +103,6 @@ class Record{
             print("client error")
             return
         }
-        
         let _ = client.files.upload(path: filePathName, mode: .add, autorename: false, clientModified: nil, mute: false, input: fileData)
             .response { response, error in
                 if let metadata = response {

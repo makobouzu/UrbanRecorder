@@ -24,7 +24,7 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     var isRecording = false
     var isPlaying   = false
-    var now         = " "
+    var now:String  = " "
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +51,10 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     @IBAction func record(){
         if !isRecording {
+            
+//          csv recording
+            appDelegate.rec.rec()
+            
 //          audio recording
             let session = AVAudioSession.sharedInstance()
             try! session.setCategory(AVAudioSession.Category.playAndRecord)
@@ -66,9 +70,6 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             audioRecorder = try! AVAudioRecorder(url: appDelegate.rec.getURL(now, ".m4a"), settings:settings)
             audioRecorder.delegate = self
             audioRecorder.record()
-            
-//          csv recording
-            appDelegate.rec.rec()
             
             isRecording = true
             label.text = "録音中"
@@ -113,6 +114,7 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     }
     
     @IBAction func upload(){
+        //最初の１回目はnowに値が入ってない?
         let folder = "/" + now
         appDelegate.rec.saveFolder(folderPathName: folder)
         appDelegate.rec.saveCSV(date: now, arrData: appDelegate.rec.data)
