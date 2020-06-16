@@ -13,7 +13,7 @@
         <!--Audio-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="FirstViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RECboard" id="9pv-A4-QxB" customClass="FirstViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,7 +68,7 @@
         <!--BLE connect-->
         <scene sceneID="wg7-f3-ORb">
             <objects>
-                <viewController id="8rJ-Kc-sve" customClass="SecondViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BLEboard" id="8rJ-Kc-sve" customClass="SecondViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -235,7 +235,7 @@
         <!--YOLO recognition-->
         <scene sceneID="aAz-Ib-u7e">
             <objects>
-                <viewController title="YOLO recognition" id="q5p-Jb-wFv" customClass="ThirdViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="YOLOboard" title="YOLO recognition" id="q5p-Jb-wFv" customClass="ThirdViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="79G-Eb-eEn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -321,7 +321,7 @@
         <!--Location-->
         <scene sceneID="WX7-3g-gft">
             <objects>
-                <viewController title="Location" id="pdr-8k-cbF" customClass="ForthViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LOCATIONboard" title="Location" id="pdr-8k-cbF" customClass="ForthViewController" customModule="UrbanRecorder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CkA-rA-6RV">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -20,7 +20,7 @@ class Record{
     var address: String
     var person: Int
     var car: Int
-    var bycicle: Int
+    var bicycle: Int
     var data: [[String]]
     var timer            = Timer()
     var programStart     = Date()
@@ -39,8 +39,8 @@ class Record{
         address     = " "
         person      = 0
         car         = 0
-        bycicle     = 0
-        data        = [["time", "temperature", "humidity", "pressure", "latitude", "longitude", "address", "person", "car", "bycicle"]]
+        bicycle     = 0
+        data        = [["time", "temperature", "humidity", "pressure", "latitude", "longitude", "address", "person", "car", "bicycle"]]
         recStart    = 0.0
     }
 
@@ -61,15 +61,9 @@ class Record{
         timer.invalidate()
     }
     
-    public func upload(){
-        saveFolder(folderPathName: date)
-        uploadFile(date: date, extensions: ".m4a")
-        uploadFile(date: date, extensions: ".csv")
-    }
-    
-    private func uploadFile(date: String, extensions: String){
+    public func uploadFile(date: String, extensions: String){
         guard let fileData:Data = NSData(contentsOf: getURL(date, extensions)) as Data? else {
-            print("error")
+            print("data error")
             return
         }
         let folder = "/" + date
@@ -77,7 +71,7 @@ class Record{
         saveFile(filePathName: file, fileData: fileData)
     }
     
-    private func getURL(_ date: String, _ extensions: String) -> URL{
+    public func getURL(_ date: String, _ extensions: String) -> URL{
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let docsDirect = paths[0]
         let filename:String = date + extensions
@@ -85,12 +79,21 @@ class Record{
         return url
     }
     
-    private func saveFolder(folderPathName: String){
+    public func saveFolder(folderPathName: String){
         guard let client = DropboxClientsManager.authorizedClient else {
             print("client error")
             return
         }
-        _ = client.files.createFolderV2(path: folderPathName)
+        client.files.createFolderV2(path: folderPathName).response { response, error in
+            if error != nil {
+                print("error")
+                return
+            }
+            guard response != nil else {
+                print("no response")
+                return
+            }
+        }
     }
     
     private func saveFile(filePathName: String, fileData: Data) {
@@ -112,17 +115,42 @@ class Record{
         let elapsed = Date().timeIntervalSince(programStart) - recStart
         let elapsedTime = elapsed * 10
         timestamp = Float(floor(elapsedTime)/10)
-        let array = [String(timestamp), String(temperature), String(humidity), String(pressure), String(latitude), String(longitude), address, String(person), String(car), String(bycicle)]
+        let array = [String(timestamp), String(temperature), String(humidity), String(pressure), String(latitude), String(longitude), String(address), String(person), String(car), String(bicycle)]
         return array
     }
     
     private func createCSV(){
         self.data.removeAll()
-        self.data.append(["time", "temperature", "humidity", "pressure", "latitude", "longitude", "address", "person", "car", "bycicle"])
+        self.data.append(["time", "temperature", "humidity", "pressure", "latitude", "longitude", "address", "person", "car", "bicycle"])
     }
     
     @objc public func updateCSV(){
         self.data.append(createArray())
+    }
+    
+    public func saveCSV(date : String, arrData : [[String]]){
+        let filePath = NSHomeDirectory() + "/Documents/" + date + ".csv"
+        print(filePath)
+        
+        print(arrData)
+        var fileStrData:String = ""
+        for singleArray in arrData{
+            for singleString in singleArray{
+                fileStrData += "\"" + singleString + "\""
+//                if singleString != singleArray[singleArray.count-1]{
+                    fileStrData += ","
+//                }
+            }
+            fileStrData += "\n"
+        }
+        print(fileStrData)
+        
+        do{
+            try fileStrData.write(toFile: filePath, atomically: true, encoding: String.Encoding.utf8)
+            print("Success to Write the File")
+        }catch let error as NSError{
+            print("Failure to Write File\n\(error)")
+        }
     }
     
 //  setter--------------------------------------------------------------------------
@@ -162,8 +190,8 @@ class Record{
         car = ca
     }
     
-    public func setBycicle(_ bike: Int){
-        bycicle = bike
+    public func setBicycle(_ bike: Int){
+        bicycle = bike
     }
     
 }

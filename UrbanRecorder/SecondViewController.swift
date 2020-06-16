@@ -20,6 +20,8 @@ class SecondViewController: UIViewController, CBCentralManagerDelegate, CBPeriph
     var connectPeripheral: CBPeripheral? = nil
     var writeCharacteristic: CBCharacteristic? = nil
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var pressureLabel: UILabel!
@@ -179,90 +181,12 @@ class SecondViewController: UIViewController, CBCentralManagerDelegate, CBPeriph
             temperatureLabel.text = String(temperature)
             humidityLabel.text    = String(humidity)
             pressureLabel.text    = String(pressure)
-            createArray(temperature: temperature, humidity: humidity, pressure: pressure)
+            
+            appDelegate.rec.setTemperature(temperature)
+            appDelegate.rec.setHumidity(humidity)
+            appDelegate.rec.setPressure(pressure)
         }
     }
-    
-    @IBAction func rec(_ sender: UIButton) {
-        csvArray.removeAll()
-        print(csvArray)
-        csvArray.append(["time", "temperature", "humidity", "pressure"])
-        recStart = Date().timeIntervalSince(programStart)
-        let dt = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "HH:mm:ss", options: 0, locale: Locale(identifier: "jp_JP"))
-        date = formatter.string(from: dt)
-    }
-    
-    @IBAction func upload(_ sender: UIButton) {
-        saveCSV(fileName: date, fileArrData: csvArray)
-        guard let fileData:Data = NSData(contentsOf: getURL(date)) as Data? else {
-            print("error")
-            return
-        }
-        let folder = "/" + date
-        let file = folder + "/" + date + ".csv"
-        saveFile(filePathName: file, folderPathName: folder, fileData: fileData)
-    }
-    
-    func createArray(temperature: Float, humidity: Float, pressure: Float){
-        let elapsed = Date().timeIntervalSince(programStart) - recStart
-        let elapsedTime = elapsed * 10
-        let array:[String] = [String(floor(elapsedTime)/10), String(temperature), String(humidity), String(pressure)]
-        csvArray.append(array)
-        print(csvArray)
-    }
-    
-    func getURL(_ date: String) -> URL{
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let docsDirect = paths[0]
-        let url = docsDirect.appendingPathComponent(date + ".csv")
-        return url
-    }
-    
-    func saveCSV(fileName : String, fileArrData : [[String]]){
-        //        let filePath = NSHomeDirectory() + "/Documents/" + fileName + ".csv"
-        //        print(filePath)
-        //        let filePath = getURL(fileName).absoluteString
-        let filePath = NSHomeDirectory() + "/Documents/" + fileName + ".csv"
-        print(filePath)
-        
-        var fileStrData:String = ""
-        for singleArray in fileArrData{
-            for singleString in singleArray{
-                fileStrData += "\"" + singleString + "\""
-                if singleString != singleArray[singleArray.count-1]{
-                    fileStrData += ","
-                }
-            }
-            fileStrData += "\n"
-        }
-        print(fileStrData)
-        
-        do{
-            try fileStrData.write(toFile: filePath, atomically: true, encoding: String.Encoding.utf8)
-            print("Success to Write the File")
-        }catch let error as NSError{
-            print("Failure to Write File\n\(error)")
-        }
-    }
-    
-    func saveFile(filePathName: String, folderPathName: String, fileData: Data) {
-        guard let client = DropboxClientsManager.authorizedClient else {
-            print("client error")
-            return
-        }
-        
-        _ = client.files.createFolderV2(path: folderPathName)
-        let _ = client.files.upload(path: filePathName, mode: .add, autorename: false, clientModified: nil, mute: false, input: fileData).response { response, error in
-            if let metadata = response {
-                print("Uploaded file name: \(metadata.name)")
-            } else {
-                print(error!)
-            }
-        }
-    }
-    
 }
 
 

@@ -12,12 +12,15 @@ import CoreLocation
 
 class ForthViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var map: MKMapView!
-    var locationManager: CLLocationManager!
-    var address = " "
-    var geoCoder = CLGeocoder()
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var LongtitudeLabel: UILabel!
     @IBOutlet weak var AddressLabel: UILabel!
+    
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    var locationManager: CLLocationManager!
+    var address = " "
+    var geoCoder = CLGeocoder()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +67,10 @@ class ForthViewController: UIViewController, CLLocationManagerDelegate {
         latitudeLabel.text = String(latitude!)
         LongtitudeLabel.text = String(longitude!)
         AddressLabel.text = address
+        
+        appDelegate.rec.setLatitude(Double(latitude!))
+        appDelegate.rec.setLongtitude(Double(longitude!))
+        appDelegate.rec.setAddress(address)
     }
     
     func initMap() {

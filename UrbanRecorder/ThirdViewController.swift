@@ -17,6 +17,8 @@ class ThirdViewController: UIViewController {
     @IBOutlet weak var bicycleLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     let yolo = YOLO()
     
     var videoCapture: VideoCapture!
@@ -207,6 +209,10 @@ class ThirdViewController: UIViewController {
             personLabel.text = ("\(personCount)人")
             carLabel.text = ("\(carCount)個")
             bicycleLabel.text   = ("\(bicycleCount)冊")
+            
+            appDelegate.rec.setPerson(Int(personCount))
+            appDelegate.rec.setCar(Int(carCount))
+            appDelegate.rec.setBicycle(Int(bicycleCount))
         }
     }
 }
