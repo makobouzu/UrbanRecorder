@@ -207,8 +207,8 @@ class ThirdViewController: UIViewController {
                 }
             }
             personLabel.text = ("\(personCount)人")
-            carLabel.text = ("\(carCount)個")
-            bicycleLabel.text   = ("\(bicycleCount)冊")
+            carLabel.text = ("\(carCount)台")
+            bicycleLabel.text   = ("\(bicycleCount)台")
             
             appDelegate.rec.setPerson(Int(personCount))
             appDelegate.rec.setCar(Int(carCount))

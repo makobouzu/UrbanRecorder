@@ -11,6 +11,8 @@ import SwiftyDropbox
 
 class Record{
     var date: String
+    var day: String
+    var daydate: String
     var timestamp: Float
     var temperature: Float
     var humidity: Float
@@ -30,6 +32,8 @@ class Record{
 //  base func----------------------------------------------------------------------
     init(){
         date        = " "
+        day         = " "
+        daydate     = " "
         timestamp   = 0.0
         temperature = 0.0
         humidity    = 0.0
@@ -47,8 +51,12 @@ class Record{
     public func rec(){
         let dt               = Date()
         let formatter        = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "HH:mm:ss", options: 0, locale: Locale(identifier: "jp_JP"))
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate:  "HH:mm:ss", options: 0, locale: Locale(identifier: "jp_JP"))
         self.date            = formatter.string(from: dt)
+        let dt2              = Date()
+        formatter.dateStyle = .medium
+        self.day             = formatter.string(from: dt2)
+        self.daydate         = day + " " + date
         self.recStart        = Date().timeIntervalSince(programStart)
         
         createCSV()
@@ -61,12 +69,12 @@ class Record{
         timer.invalidate()
     }
     
-    public func uploadFile(date: String, extensions: String){
+    public func uploadFile(date: String, daydate: String, extensions: String){
         guard let fileData:Data = NSData(contentsOf: getURL(date, extensions)) as Data? else {
             print("data error")
             return
         }
-        let folder = "/" + date
+        let folder = "/" + daydate
         let file = folder + "/" + date + extensions
         saveFile(filePathName: file, fileData: fileData)
     }
@@ -135,7 +143,7 @@ class Record{
     }
     
     public func saveCSV(date : String, arrData : [[String]]){
-        let filePath = NSHomeDirectory() + "/Documents/" + date + ".csv"
+        let filePath = NSHomeDirectory() + "/Documents" + "/" + date + ".csv"
         print(filePath)
         
         print(arrData)

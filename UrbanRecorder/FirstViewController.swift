@@ -24,7 +24,8 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     
     var isRecording = false
     var isPlaying   = false
-    var now:String  = " "
+    var now         = " "
+    var nowDay      = " "
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,12 +68,13 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
                 AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
             ]
             now = appDelegate.rec.date
+            nowDay = appDelegate.rec.daydate
             audioRecorder = try! AVAudioRecorder(url: appDelegate.rec.getURL(now, ".m4a"), settings:settings)
             audioRecorder.delegate = self
             audioRecorder.record()
             
             isRecording = true
-            label.text = "録音中"
+            label.text = "recording"
             recordButton.setTitle("STOP", for: .normal)
             playButton.isEnabled = false
         }else{
@@ -82,7 +84,7 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             
             
             isRecording = false
-            label.text = "待機中"
+            label.text = "waiting"
             recordButton.setTitle("REC", for: .normal)
             playButton.isEnabled = true
             
@@ -98,7 +100,7 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             
             isPlaying = true
             
-            label.text = "再生中"
+            label.text = "playing"
             playButton.setTitle("STOP", for: .normal)
             recordButton.isEnabled = false
         }else{
@@ -106,7 +108,7 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
             audioPlayer.stop()
             isPlaying = false
             
-            label.text = "待機中"
+            label.text = "waiting"
             playButton.setTitle("PLAY", for: .normal)
             recordButton.isEnabled = true
             
@@ -114,12 +116,13 @@ class FirstViewController: UIViewController, AVAudioRecorderDelegate, AVAudioPla
     }
     
     @IBAction func upload(){
-        //最初の１回目はnowに値が入ってない?
-        let folder = "/" + now
+        label.text = "uploading"
+        let folder = "/" + nowDay
         appDelegate.rec.saveFolder(folderPathName: folder)
         appDelegate.rec.saveCSV(date: now, arrData: appDelegate.rec.data)
-        appDelegate.rec.uploadFile(date: now, extensions: ".m4a")
-        appDelegate.rec.uploadFile(date: now, extensions: ".csv")
+        appDelegate.rec.uploadFile(date: now, daydate: nowDay, extensions: ".m4a")
+        appDelegate.rec.uploadFile(date: now, daydate: nowDay, extensions: ".csv")
+        label.text = "finish uploading"
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
